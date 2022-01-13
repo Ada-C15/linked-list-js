@@ -1,282 +1,308 @@
 const LinkedList = require("../lib/linked-list");
 
 describe("LinkedList", () => {
-    let list;
+  let list;
 
-    beforeEach(() => {
-        list = new LinkedList();
+  beforeEach(() => {
+    list = new LinkedList();
+  });
+
+  describe("constructor", () => {
+    it("can be created", () => {
+      expect(list).toBeInstanceOf(LinkedList);
+    });
+  });
+
+  describe("addFirst and getFirst", () => {
+    it("returns null for getFirst on an empty list", () => {
+      expect(list.getFirst()).toBeNull();
     });
 
-    describe("constructor", () => {
-        it("can be created", () => {
-            expect(list).toBeInstanceOf(LinkedList);
-        });
+    it("can add values to an empty list", () => {
+      // Act
+      list.addFirst(3);
+
+      // Assert
+      expect(list.getFirst()).toEqual(3);
+
+      // Act
+      list.addFirst(4);
+
+      // Assert
+      expect(list.getFirst()).toEqual(4);
+
+      // Act
+      list.addFirst("pasta");
+
+      // Assert
+      expect(list.getFirst()).toEqual("pasta");
+    });
+  });
+
+  describe("search", () => {
+    it("returns false for an empty list", () => {
+      expect(list.search(3)).toBe(false);
     });
 
-    describe("addFirst and getFirst", () => {
-        it("can add values to an empty list", () => {
-            // Act
-            list.addFirst(3);
+    it("returns false if the element is not in the list", () => {
+      // Act
+      list.addFirst(2);
+      list.addFirst(3);
 
-            // Assert
-            expect(list.getAtIndex(0)).toEqual(3);
-        });
-
-        it("will put the last added item to the front of the list", () => {
-            // Act
-            list.addFirst(1);
-            list.addFirst(2);
-
-            // Assert
-            expect(list.getAtIndex(0)).toEqual(2);
-
-            // Act again
-            list.addFirst(3);
-
-            // Assert
-            expect(list.getAtIndex(0)).toEqual(3);
-        });
-
-        it("will return null when getting the first item if the list is empty", () => {
-            // Assert
-            expect(list.getAtIndex(0)).toBeNull();
-        });
-    });
-    describe("search", () => {
-        it("can find an element", () => {
-            // Act
-            list.addFirst(2);
-            list.addFirst(3);
-
-            // Assert
-            expect(list.search(2)).toEqual(true);
-            expect(list.search(3)).toEqual(true);
-        });
-        it("returns false if the element is not in the list", () => {
-            // Act
-            list.addFirst(2);
-            list.addFirst(3);
-
-            // Assert
-            expect(list.search("pasta")).toEqual(false);
-        });
-
-        it("will return false for an empty list", () => {
-            // Assert
-            expect(list.search(3)).toEqual(false);
-        });
+      // Assert
+      expect(list.search("pasta")).toEqual(false);
     });
 
-    describe("length", () => {
-        it("will return zero for an empty list", () => {
-            // Assert
-            expect(list.length()).toEqual(0);
-        });
-        it("will return the length for non-empty lists", () => {
-            // Arrange
-            let count = 0;
-            while (count < 5) {
-                list.addFirst(count);
-                count += 1
-            }
+    it("can find an element", () => {
+      // Act
+      list.addFirst(2);
+      list.addFirst(3);
 
-            // Act + Assert
-            expect(list.length()).toEqual(count);
-        });
-    });
-    
-    describe("getAtIndex", () => {
-        it("will return null if the index is outside the bounds of the list", () => {
-            // Assert
-            expect(list.getAtIndex(3)).toBeNull();
-        });
-
-        it("can retrieve an item at the index of the list", () => {
-            // Arrange
-            list.addFirst(1)
-            list.addFirst(2)
-            list.addFirst(3)
-            list.addFirst(4)
-
-            // Assert
-            expect(list.getAtIndex(0)).toEqual(4);
-            expect(list.getAtIndex(1)).toEqual(3);
-            expect(list.getAtIndex(2)).toEqual(2);
-            expect(list.getAtIndex(3)).toEqual(1);
-        });
+      // Assert
+      expect(list.search(2)).toEqual(true);
+      expect(list.search(3)).toEqual(true);
     });
 
-    describe.skip("addLast and getLast", () => {
-        it("will put new items to the rear of the list", () => {
-            list.addLast(2);
-            expect(list.length()).toEqual(1);
-            expect(list.getLast()).toEqual(2);
+    it("can find an element in the middle of a list", () => {
+      // Arrange
 
-            list.addLast(3);
-            expect(list.getAtIndex(0)).toEqual(2);
-            expect(list.length()).toEqual(2);
-            expect(list.getLast()).toEqual(3);
+      list.addFirst(1);
+      list.addFirst(2);
+      list.addFirst(3);
+      list.addFirst(4);
+      list.addFirst(5);
 
-            list.addLast(4);
-            expect(list.getAtIndex(0)).toEqual(2);
-            expect(list.length()).toEqual(3);
-            expect(list.getLast()).toEqual(4);
-        })
+      // Act
+      const answer = list.search(3);
 
-        it("will add to the front of the list if the list is empty", () => {
-            // Act
-            list.addLast(2);
+      // Assert
+      expect(answer).toEqual(true);
+    });
+  });
 
-            // Assert
-            expect(list.getAtIndex(0)).toEqual(2);
-        })
+  describe("length", () => {
+    it("will return zero for an empty list", () => {
+      // Assert
+      expect(list.length()).toEqual(0);
     });
 
+    it("will return 1 for a list with one element", () => {
+      // Arrange
+      list.addFirst(3);
 
-    describe("findMax", () => {
-        it("returns null if the list is empty", () => {
-            expect(list.findMax()).toBeNull();
-        });
+      // Act
+      const answer = list.length();
 
-        it("can retrieve the max value in the list", () => {
-            let count = 0;
-            while (count < 5) {
-                list.addFirst(count);
-                expect(list.findMax()).toEqual(count);
-                count += 1
-            }
-
-            list.addFirst(100);
-            list.addFirst(-12);
-
-            expect(list.findMax()).toEqual(100);
-        });
+      // Assert
+      expect(answer).toEqual(1);
     });
 
-    describe("delete", () => {
-        it("deleting from empty list is a no-op", () => {
-            expect(list.length()).toEqual(0);
-            list.delete(4);
-            expect(list.length()).toEqual(0);
-        });
+    it("will increase the length with each addFirst", () => {
+      // Arrange
+      let count = 0;
+      while (count < 5) {
+        list.addFirst(count);
+        count += 1;
+      }
 
-        it("can delete valid values from a list", () => {
-            list.addFirst(9);
-            list.addFirst(10);
-            list.addFirst(4);
-            list.addFirst(3);
-            list.addFirst(2);
+      // Act + Assert
+      expect(list.length()).toEqual(count);
+    });
+  });
 
-            // delete first node (requires updating head)
-            list.delete(2)
-            expect(list.getAtIndex(0)).toEqual(3)
-            expect(list.length()).toEqual(4)
-            expect(list.getAtIndex(list.length() - 1)).toEqual(9)
-            expect(list.findMax()).toEqual(10);
-
-
-            list.delete(10)
-            expect(list.getAtIndex(0)).toEqual(3)
-            expect(list.length()).toEqual(3)
-            expect(list.getAtIndex(list.length() - 1)).toEqual(9)
-            expect(list.findMax()).toEqual(9);
-
-            list.delete(4)
-            expect(list.getAtIndex(0)).toEqual(3)
-            expect(list.length()).toEqual(2)
-            expect(list.getAtIndex(list.length() - 1)).toEqual(9)
-            expect(list.findMax()).toEqual(9);
-        });
+  describe("getAtIndex", () => {
+    it("will return null if the index is outside the bounds of the list", () => {
+      // Assert
+      expect(list.getAtIndex(3)).toBeNull();
     });
 
-    describe("reverse", () => {
-        it("can reverse the linked list", () => {
-            // Arrange
-            list.addFirst(4);
-            list.addFirst(3);
-            list.addFirst(2);
-            list.addFirst(1);
+    it("can retrieve an item at the index of the list", () => {
+      // Arrange
+      list.addFirst(1);
+      list.addFirst(2);
+      list.addFirst(3);
+      list.addFirst(4);
 
-            list.reverse();
+      // Assert
+      expect(list.getAtIndex(0)).toEqual(4);
+      expect(list.getAtIndex(1)).toEqual(3);
+      expect(list.getAtIndex(2)).toEqual(2);
+      expect(list.getAtIndex(3)).toEqual(1);
+    });
+  });
 
-            // Assert
-            expect(list.getAtIndex(0)).toEqual(4);
-            expect(list.getAtIndex(1)).toEqual(3);
-            expect(list.getAtIndex(2)).toEqual(2);
-            expect(list.getAtIndex(3)).toEqual(1);
-        });
+  describe.skip("addLast and getLast", () => {
+    it("will return null for getLast on an empty list", () => {
+      expect(list.getLast()).toBeNull();
     });
 
-    describe.skip("Optional: getMiddleValue", () => {
-        it("finds the middle value of a list with odd length", () => {
-            list.addFirst(3);
-            list.addFirst(2);
-            list.addFirst(1);
+    it("will put new items to the rear of the list", () => {
+      list.addLast(2);
+      expect(list.length()).toEqual(1);
+      expect(list.getLast()).toEqual(2);
 
-            // the middle value is the value at index list.length/2
-            // here, that rounds down to index 1
-            expect(list.findMiddleValue()).toEqual(2);
-        });
-        it("finds the middle value of a list with even length", () => {
-            list.addFirst(4);
-            list.addFirst(3);
-            list.addFirst(2);
-            list.addFirst(1);
+      list.addLast(3);
+      expect(list.getAtIndex(0)).toEqual(2);
+      expect(list.length()).toEqual(2);
+      expect(list.getLast()).toEqual(3);
 
-            // the middle value is the value at index list.length/2
-            // here, that equals index 2
-            expect(list.findMiddleValue()).toEqual(3);
-        });
+      list.addLast(4);
+      expect(list.getAtIndex(0)).toEqual(2);
+      expect(list.length()).toEqual(3);
+      expect(list.getLast()).toEqual(4);
     });
 
-    describe.skip("Optional: findNthFromEend", () => {
-        it("will return null if the index is outside the bounds of the list", () => {
-            // Assert
-            expect(list.findNthFromEnd(3)).toBeNull();
-        });
+    it("will add to the front of the list if the list is empty", () => {
+      // Act
+      list.addLast(2);
 
-        it("can retrieve an item at index n from the end in the list", () => {
-            list.addFirst(1);
-            list.addFirst(2);
-            list.addFirst(3);
-            list.addFirst(4);
+      // Assert
+      expect(list.getAtIndex(0)).toEqual(2);
+    });
+  });
 
-            // Assert
-            expect(list.findNthFromEnd(1)).toEqual(1);
-            expect(list.findNthFromEnd(2)).toEqual(2);
-            expect(list.findNthFromEnd(3)).toEqual(3);
-            expect(list.findNthFromEnd(4)).toEqual(4);
-        });
-    });    
-
-    describe.skip("Optional: hasCycle", () => {
-        it("will return true when a cycle is present", () => {
-            list.addFirst(1);
-            list.addFirst(2);
-            list.addFirst(3);
-
-            list.createCycle();
-
-            expect(list.hasCycle()).toEqual(true);
-        });
-
-        it("will return false when no cycle is present", () => {
-            list.addFirst(1);
-            list.addFirst(2);
-            list.addFirst(3);
-
-            expect(list.hasCycle()).toEqual(false);
-        })
-
-        it("returns true when the cycle contains only one node", () => {
-            list.addFirst(1);
-            list.createCycle();
-            expect(list.hasCycle()).toEqual(true);
-        })
-
-        it("will return false if the list is empty", () => {
-            expect(list.hasCycle()).toEqual(false);
-        })
+  describe("findMax", () => {
+    it("returns null if the list is empty", () => {
+      expect(list.findMax()).toBeNull();
     });
 
-})
+    it("can retrieve the max value in the list", () => {
+      let count = 0;
+      while (count < 5) {
+        list.addFirst(count);
+        expect(list.findMax()).toEqual(count);
+        count += 1;
+      }
+
+      list.addFirst(100);
+      list.addFirst(-12);
+
+      expect(list.findMax()).toEqual(100);
+    });
+  });
+
+  describe("delete", () => {
+    it("deleting from empty list is a no-op", () => {
+      expect(list.length()).toEqual(0);
+      list.delete(4);
+      expect(list.length()).toEqual(0);
+    });
+
+    it("can delete valid values from a list", () => {
+      list.addFirst(9);
+      list.addFirst(10);
+      list.addFirst(4);
+      list.addFirst(3);
+      list.addFirst(2);
+
+      // delete first node (requires updating head)
+      list.delete(2);
+      expect(list.getAtIndex(0)).toEqual(3);
+      expect(list.length()).toEqual(4);
+      expect(list.getAtIndex(list.length() - 1)).toEqual(9);
+      expect(list.findMax()).toEqual(10);
+
+      list.delete(10);
+      expect(list.getAtIndex(0)).toEqual(3);
+      expect(list.length()).toEqual(3);
+      expect(list.getAtIndex(list.length() - 1)).toEqual(9);
+      expect(list.findMax()).toEqual(9);
+
+      list.delete(4);
+      expect(list.getAtIndex(0)).toEqual(3);
+      expect(list.length()).toEqual(2);
+      expect(list.getAtIndex(list.length() - 1)).toEqual(9);
+      expect(list.findMax()).toEqual(9);
+    });
+  });
+
+  describe("reverse", () => {
+    it("can reverse the linked list", () => {
+      // Arrange
+      list.addFirst(4);
+      list.addFirst(3);
+      list.addFirst(2);
+      list.addFirst(1);
+
+      list.reverse();
+
+      // Assert
+      expect(list.getAtIndex(0)).toEqual(4);
+      expect(list.getAtIndex(1)).toEqual(3);
+      expect(list.getAtIndex(2)).toEqual(2);
+      expect(list.getAtIndex(3)).toEqual(1);
+    });
+  });
+
+  describe.skip("Optional: getMiddleValue", () => {
+    it("finds the middle value of a list with odd length", () => {
+      list.addFirst(3);
+      list.addFirst(2);
+      list.addFirst(1);
+
+      // the middle value is the value at index list.length/2
+      // here, that rounds down to index 1
+      expect(list.findMiddleValue()).toEqual(2);
+    });
+    it("finds the middle value of a list with even length", () => {
+      list.addFirst(4);
+      list.addFirst(3);
+      list.addFirst(2);
+      list.addFirst(1);
+
+      // the middle value is the value at index list.length/2
+      // here, that equals index 2
+      expect(list.findMiddleValue()).toEqual(3);
+    });
+  });
+
+  describe.skip("Optional: findNthFromEend", () => {
+    it("will return null if the index is outside the bounds of the list", () => {
+      // Assert
+      expect(list.findNthFromEnd(3)).toBeNull();
+    });
+
+    it("can retrieve an item at index n from the end in the list", () => {
+      list.addFirst(1);
+      list.addFirst(2);
+      list.addFirst(3);
+      list.addFirst(4);
+
+      // Assert
+      expect(list.findNthFromEnd(1)).toEqual(1);
+      expect(list.findNthFromEnd(2)).toEqual(2);
+      expect(list.findNthFromEnd(3)).toEqual(3);
+      expect(list.findNthFromEnd(4)).toEqual(4);
+    });
+  });
+
+  describe.skip("Optional: hasCycle", () => {
+    it("will return true when a cycle is present", () => {
+      list.addFirst(1);
+      list.addFirst(2);
+      list.addFirst(3);
+
+      list.createCycle();
+
+      expect(list.hasCycle()).toEqual(true);
+    });
+
+    it("will return false when no cycle is present", () => {
+      list.addFirst(1);
+      list.addFirst(2);
+      list.addFirst(3);
+
+      expect(list.hasCycle()).toEqual(false);
+    });
+
+    it("returns true when the cycle contains only one node", () => {
+      list.addFirst(1);
+      list.createCycle();
+      expect(list.hasCycle()).toEqual(true);
+    });
+
+    it("will return false if the list is empty", () => {
+      expect(list.hasCycle()).toEqual(false);
+    });
+  });
+});
